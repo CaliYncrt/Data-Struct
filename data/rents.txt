@@ -1,0 +1,6 @@
+ID: 1
+CustomerID: 1
+ComputerName: Computer 1
+RentDate: 2024-07-02
+ReturnDate: Not Returned
+---
