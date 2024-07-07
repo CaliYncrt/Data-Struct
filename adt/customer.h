@@ -5,8 +5,6 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "computer.h"
-#include "rent.h"
 
 #ifdef _WIN32
 #include <direct.h>
@@ -35,8 +33,6 @@ private:
     int getNextID();
     bool loadCustomers();
     void saveCustomers();
-    void appendCustomer(const Customer& customer);
-
     void printError(const string& msg) {
         cerr << "Error: " << msg << endl;
     }
@@ -49,15 +45,13 @@ void CustomerADT::addCustomer() {
     customer.id = getNextID();
 
     cout << "Enter Customer Name: ";
-    cin.ignore();
-    getline(cin, customer.name);
+    getline(cin >> ws, customer.name); 
     cout << "Enter Customer Address: ";
     getline(cin, customer.address);
 
     customers.push_back(customer);
     saveCustomers();
     cout << "New Customer Added!" << endl;
-    cin.ignore();
 }
 
 void CustomerADT::showCustomerDetails() {
@@ -67,15 +61,18 @@ void CustomerADT::showCustomerDetails() {
     cout << "Enter Customer ID: ";
     cin >> id;
 
+    bool customerFound = false;
     for (const auto& customer : customers) {
         if (customer.id == id) {
             cout << "ID: " << customer.id << "\nName: " << customer.name << "\nAddress: " << customer.address << endl;
-            cin.ignore();
-            return;
+            customerFound = true;
+            break;
         }
     }
-    cout << "Customer ID Not Found!" << endl;
-    cin.ignore();
+
+    if (!customerFound) {
+        cout << "Customer ID Not Found!" << endl;
+    }
 }
 
 void CustomerADT::printAllCustomers() {
@@ -84,7 +81,6 @@ void CustomerADT::printAllCustomers() {
     for (const auto& customer : customers) {
         cout << "ID: " << customer.id << "\nName: " << customer.name << "\nAddress: " << customer.address << endl;
     }
-    cin.ignore();
 }
 
 int CustomerADT::getNextID() {
@@ -94,7 +90,7 @@ int CustomerADT::getNextID() {
 bool CustomerADT::loadCustomers() {
     ifstream file(customerPath);
     if (!file) {
-        printError("Unable to open file.");
+        printError("Unable to open file: " + string(customerPath));
         return false;
     }
 
@@ -125,7 +121,7 @@ void CustomerADT::saveCustomers() {
 
     ofstream file(customerPath);
     if (!file) {
-        printError("Unable to open file.");
+        printError("Unable to open file: " + string(customerPath));
         return;
     }
 
