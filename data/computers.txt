@@ -1,0 +1,18 @@
+ID: 1
+Name: Computer 1
+Specifications: i5
+Brand: TUF
+Units: 5
+---
+ID: 2
+Name: Computer 10
+Specifications: Intel i5
+Brand: TUF
+Units: 4
+---
+ID: 3
+Name: Computer 2
+Specifications: i5
+Brand: ASUS
+Units: 1
+---
