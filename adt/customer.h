@@ -5,6 +5,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include "computer.h"
+#include "rent.h"
 
 #ifdef _WIN32
 #include <direct.h>
@@ -13,6 +15,12 @@
 #endif
 
 using namespace std;
+
+// Define color codes for text
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define YELLOW "\033[33m"
+#define RESET "\033[0m"
 
 class CustomerADT {
 public:
@@ -33,8 +41,10 @@ private:
     int getNextID();
     bool loadCustomers();
     void saveCustomers();
+    void appendCustomer(const Customer& customer);
+
     void printError(const string& msg) {
-        cerr << "Error: " << msg << endl;
+        cerr << RED << "Error: " << RESET << msg << endl;
     }
 };
 
@@ -44,35 +54,34 @@ void CustomerADT::addCustomer() {
     Customer customer;
     customer.id = getNextID();
 
-    cout << "Enter Customer Name: ";
-    getline(cin >> ws, customer.name); 
-    cout << "Enter Customer Address: ";
+    cout << GREEN << "Enter Customer Name: " << RESET;
+    cin.ignore();
+    getline(cin, customer.name);
+    cout << GREEN << "Enter Customer Address: " << RESET;
     getline(cin, customer.address);
 
     customers.push_back(customer);
     saveCustomers();
-    cout << "New Customer Added!" << endl;
+    cout << GREEN << "New Customer Added!" << RESET << endl;
+    cin.ignore();
 }
 
 void CustomerADT::showCustomerDetails() {
     if (!loadCustomers()) return;
 
     int id;
-    cout << "Enter Customer ID: ";
+    cout << GREEN << "Enter Customer ID: " << RESET;
     cin >> id;
 
-    bool customerFound = false;
     for (const auto& customer : customers) {
         if (customer.id == id) {
             cout << "ID: " << customer.id << "\nName: " << customer.name << "\nAddress: " << customer.address << endl;
-            customerFound = true;
-            break;
+            cin.ignore();
+            return;
         }
     }
-
-    if (!customerFound) {
-        cout << "Customer ID Not Found!" << endl;
-    }
+    cout << RED << "Customer ID Not Found!" << RESET << endl;
+    cin.ignore();
 }
 
 void CustomerADT::printAllCustomers() {
@@ -81,6 +90,7 @@ void CustomerADT::printAllCustomers() {
     for (const auto& customer : customers) {
         cout << "ID: " << customer.id << "\nName: " << customer.name << "\nAddress: " << customer.address << endl;
     }
+    cin.ignore();
 }
 
 int CustomerADT::getNextID() {
@@ -90,7 +100,7 @@ int CustomerADT::getNextID() {
 bool CustomerADT::loadCustomers() {
     ifstream file(customerPath);
     if (!file) {
-        printError("Unable to open file: " + string(customerPath));
+        printError("Unable to open file.");
         return false;
     }
 
@@ -121,7 +131,7 @@ void CustomerADT::saveCustomers() {
 
     ofstream file(customerPath);
     if (!file) {
-        printError("Unable to open file: " + string(customerPath));
+        printError("Unable to open file.");
         return;
     }
 
