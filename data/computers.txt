@@ -1,6 +1,0 @@
-ID: 1
-Name: Computer 1
-Specifications: Intel i5 16GB RAM 500GB (SSD) 
-Brand: Asus
-Units: 5
----
